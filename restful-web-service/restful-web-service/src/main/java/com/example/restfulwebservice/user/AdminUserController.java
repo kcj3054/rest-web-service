@@ -42,7 +42,11 @@ public class AdminUserController {
     //우리는 id를 숫자로 해도 서버측에 전달 될 경우에는 -> String으로 된다
     //id로 하면 자동으로 원하는 int에 맞게 찾아준다
     //v1/users/
-    @GetMapping("v1//users/{id}")
+//    @GetMapping("v1//users/{id}")
+//    @GetMapping(value = "/users/{id}/", params = "version1")
+    //MIME : 이메일과 함께 동봉된 파일을 텍스로 전환해서 이메일 시스템을 통해서 전달하기 위해서 개발되었음 , produces
+//    @GetMapping(value = "/users/{id}/", headers = "X-API-VERSION=1")
+    @GetMapping(value = "/users/{id}/", produces = "application/vnd.company.appv1+json")
     public MappingJacksonValue retrieveUserV1(@PathVariable int id) {
 
         User user = service.findOne(id);
@@ -62,7 +66,10 @@ public class AdminUserController {
 
     }
 
-    @GetMapping("v2//users/{id}")
+//    @GetMapping("v2//users/{id}")
+//    @GetMapping(value = "/users/{id}/", params = "version2")
+//    @GetMapping(value = "/users/{id}/", headers = "X-API-VERSION=2")
+    @GetMapping(value = "/users/{id}/", produces = "application/vnd.company.appv2+json")
     public MappingJacksonValue retrieveUserV2(@PathVariable int id) {
 
         User user = service.findOne(id);

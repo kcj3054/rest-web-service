@@ -1,6 +1,8 @@
 package com.example.restfulwebservice.user;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -8,6 +10,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class UserController {
@@ -21,19 +26,28 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
+
         return service.findAll();
     }
 
     //우리는 id를 숫자로 해도 서버측에 전달 될 경우에는 -> String으로 된다
     //id로 하면 자동으로 원하는 int에 맞게 찾아준다
-    @GetMapping("/users/{id}")
-    public User findOne(@PathVariable int id) {
+        //HETAOS를 적용하면 개발자의 양은 많아지지만
+        //내가 개발한 것을 보는 사용자입장에서는 더 많은 정보를 알 수 있다
+        // 사용자 상세 정보
+        @GetMapping("/users/{id}")
+        public ResponseEntity<EntityModel<User>> retrieveUser(@PathVariable int id) {
+            User user = service.findOne(id);
 
-        User user = service.findOne(id);
-        if(user == null) {
-            throw new UserNotFoundException(String.format("ID[%s] not found ", id));
-        }
-        return user;
+            if (user == null) {
+                throw new UserNotFoundException("id-" + id);
+            }
+
+            EntityModel entityModel = EntityModel.of(user);
+
+            WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+            entityModel.add(linkTo.withRel("all-users"));
+            return ResponseEntity.ok(entityModel);
 
     }
 
