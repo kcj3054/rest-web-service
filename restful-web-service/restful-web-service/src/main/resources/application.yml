@@ -9,3 +9,13 @@ logging:
 spring:
   message:
     basename: messages
+  security:
+    user:
+      name: kcj3054
+      password: 134679
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

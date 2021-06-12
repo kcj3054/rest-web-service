@@ -32,22 +32,22 @@ public class UserController {
 
     //우리는 id를 숫자로 해도 서버측에 전달 될 경우에는 -> String으로 된다
     //id로 하면 자동으로 원하는 int에 맞게 찾아준다
-        //HETAOS를 적용하면 개발자의 양은 많아지지만
-        //내가 개발한 것을 보는 사용자입장에서는 더 많은 정보를 알 수 있다
-        // 사용자 상세 정보
-        @GetMapping("/users/{id}")
-        public ResponseEntity<EntityModel<User>> retrieveUser(@PathVariable int id) {
-            User user = service.findOne(id);
+    //HETAOS를 적용하면 개발자의 양은 많아지지만
+    //내가 개발한 것을 보는 사용자입장에서는 더 많은 정보를 알 수 있다
+    // 사용자 상세 정보
+    @GetMapping("/users/{id}")
+    public ResponseEntity<EntityModel<User>> retrieveUser(@PathVariable int id) {
+        User user = service.findOne(id);
 
-            if (user == null) {
-                throw new UserNotFoundException("id-" + id);
-            }
+        if (user == null) {
+            throw new UserNotFoundException("id-" + id);
+        }
 
-            EntityModel entityModel = EntityModel.of(user);
+        EntityModel entityModel = EntityModel.of(user);
 
-            WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
-            entityModel.add(linkTo.withRel("all-users"));
-            return ResponseEntity.ok(entityModel);
+        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+        entityModel.add(linkTo.withRel("all-users"));
+        return ResponseEntity.ok(entityModel);
 
     }
 
