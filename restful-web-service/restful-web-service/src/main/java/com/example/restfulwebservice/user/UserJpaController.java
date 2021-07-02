@@ -1,2 +1,5 @@
-package com.example.restfulwebservice.user;public class UserJpaController {
+package com.example.restfulwebservice.user;
+
+public class UserJpaController {
+
 }
